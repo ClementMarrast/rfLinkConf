@@ -3,11 +3,11 @@ var SerialPort = require("serialport");
 var events = require('events');
 
 
-function serial(port)
+function serial(port, baud)
 {
   events.EventEmitter.call(this);
   this.port = port;
-  this.baudrate = 57600;
+  this.baudrate = baud;
 };
 
 serial.prototype = Object.create(events.EventEmitter.prototype);
@@ -18,7 +18,6 @@ serial.prototype.init = function()
 
   // Serial port init
   _this.connect();
-  // util.inherits(this, events.EventEmitter);
 }
 
 serial.prototype.write = function(msg){
