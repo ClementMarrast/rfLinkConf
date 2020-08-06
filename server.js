@@ -2,12 +2,11 @@ var express = require('express');
 var app = express();
 var server = require('http').Server(app);
 var path = require('path');
-var serial = require('./serial');
 var socket = require('socket.io');
-
+var rfLink = require('./rfLink');
 
 // Arguments
-var rfLinkCom = new serial(process.argv[2]);
+var rfLinkObj = new rfLink(process.argv[2]);
 console.log('Params: main COM = ' + process.argv[2]);
 
 // Variables 
@@ -29,7 +28,7 @@ io.on("connection", function(clientSocket){
     viewSock = clientSocket;
     clientSocket.on('command', function (data) {
         console.log('Command: ' + data);
-        rfLinkCom.write(data);
+        rfLinkObj.write(data);
     });
 });
 
@@ -41,7 +40,7 @@ app.get('/',function(req,res)
         {title:'RfLinkConf', message:'Welcome to RFLink configuration', ip:req.socket.address().address});
 });
 
-rfLinkCom.on('receive', function(dataStr){
+rfLinkObj.on('receiveRawData', function(dataStr){
     // Send LOGs
     if(null != viewSock){
         viewSock.emit('data', dataStr);
@@ -49,5 +48,5 @@ rfLinkCom.on('receive', function(dataStr){
 });
 
 
-rfLinkCom.init();
+rfLinkObj.init();
 
