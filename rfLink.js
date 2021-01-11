@@ -1,4 +1,5 @@
 var serial = require('./serial');
+var events = require('events');
 
 const rfLinkBaudrate = 57600;
 
@@ -16,7 +17,7 @@ rfLink.prototype = Object.create(events.EventEmitter.prototype);
 
 rfLink.prototype.init = function()
 {
- var _this = this;
+  let _this = this;
 
   // rfLink port init
   _this.rfLinkCom.connect();
@@ -28,7 +29,7 @@ rfLink.prototype.init = function()
 
 rfLink.prototype.writeRaw = function(data)
 {
- var _this = this;
+  let _this = this;
 
   // rfLink port write
   _this.rfLinkCom.write(data);

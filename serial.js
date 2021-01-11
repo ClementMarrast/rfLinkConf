@@ -22,9 +22,10 @@ serial.prototype.init = function()
 
 serial.prototype.write = function(msg){
   var _this = this;
-  console.log(_this.port )
-  console.log(msg);
-  _this.serialPort.write(msg);
+  console.log(_this.port + ': ' + msg)
+  _this.serialPort.write(msg+"\r\n", "ascii", e => {
+    console.log(e);
+  });
 }
 
 serial.prototype.connect = function(){
@@ -44,7 +45,7 @@ serial.prototype.connect = function(){
       var dataStr = data.toString();
       var dataLine = dataStr.replace('\r\n','');
       
-      console.log(dataLine);
+      // console.log(dataLine);
       // Raising receive event
       _this.emit('receive', dataStr);
     });

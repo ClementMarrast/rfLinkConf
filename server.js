@@ -4,9 +4,11 @@ var server = require('http').Server(app);
 var path = require('path');
 var socket = require('socket.io');
 var rfLink = require('./rfLink');
+var somfyRts = require('./somfy_rts')
 
 // Arguments
 var rfLinkObj = new rfLink(process.argv[2]);
+var somfyRtsObj = new somfyRts(rfLinkObj)
 console.log('Params: main COM = ' + process.argv[2]);
 
 // Variables 
@@ -20,7 +22,7 @@ server.listen(4000, '0.0.0.0');
 
 // Communication configuration
 var io = socket(server);
-io.origins('*:*');
+// io.origins('*:*');
 
 var viewSock = null;
 io.on("connection", function(clientSocket){
@@ -28,7 +30,12 @@ io.on("connection", function(clientSocket){
     viewSock = clientSocket;
     clientSocket.on('command', function (data) {
         console.log('Command: ' + data);
-        rfLinkObj.write(data);
+        rfLinkObj.writeRaw(data);
+    });
+    
+    clientSocket.on('somfy-rts', function (data) {
+        console.log("somfy-rts -- " + JSON.stringify(data))
+        somfyRtsObj.handleCommand(data)
     });
 });
 
@@ -36,7 +43,13 @@ io.on("connection", function(clientSocket){
 app.get('/',function(req,res)
 {
     console.log('Connect, server ip: ' + req.socket.address().address);
-    res.render('index',
+    res.render('uart',
+        {title:'RfLinkConf', message:'Welcome to RFLink configuration', ip:req.socket.address().address});
+});
+app.get('/somfy-rts',function(req,res)
+{
+    console.log('Connect, server ip: ' + req.socket.address().address);
+    res.render('somfy-rts',
         {title:'RfLinkConf', message:'Welcome to RFLink configuration', ip:req.socket.address().address});
 });
 
