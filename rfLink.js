@@ -50,7 +50,6 @@ rfLink.prototype.init = function()
       // console.log(rfLinkObj)
       _this.emit('data', rfLinkObj);  
     }else if(data.startsWith("RTS Record")){
-      console.log("rflink to somfy")
       _this.emit("RTS-data", data)
     }
 
