@@ -17,19 +17,22 @@ function somfyRts(rfLinkObj)
   events.EventEmitter.call(this);
 
   this.rfLinkHandle = rfLinkObj;
-
-  this.rfLinkHandle.on('receiveRawData', function(dataStr){
-    console.log("RCV --" + dataStr)
-    //Parse line
-    // if(dataStr.startsWith("RTS Record")){
-    //   line = JSON.parse(dataStr)
-    //   console.log(line)
-    // }
-    
-});
 };
 
 somfyRts.prototype = Object.create(events.EventEmitter.prototype);
+
+somfyRts.prototype.init = function()
+{
+  let _this = this
+
+  _this.rfLinkHandle.on('RTS-data', function(dataStr){
+    // Parse line
+    if(dataStr.startsWith("RTS Record")){
+      console.log("somfy to server")
+      _this.emit('rts-record', dataStr)
+    } 
+  });
+}
 
 somfyRts.prototype.readConfiguration = function()
 {

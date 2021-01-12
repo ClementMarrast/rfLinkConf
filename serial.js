@@ -23,9 +23,7 @@ serial.prototype.init = function()
 serial.prototype.write = function(msg){
   var _this = this;
   console.log(_this.port + ': ' + msg)
-  _this.serialPort.write(msg+"\r\n", "ascii", e => {
-    console.log(e);
-  });
+  _this.serialPort.write(msg+"\r\n", "ascii");
 }
 
 serial.prototype.connect = function(){
@@ -34,21 +32,21 @@ serial.prototype.connect = function(){
   _this.serialPort = new SerialPort(_this.port, {
     baudRate: _this.baudrate
   });
+  _this.Readline = SerialPort.parsers.Readline;
+  _this.parser = _this.serialPort.pipe(new _this.Readline({ delimiter: Buffer.from('\r\n', 'ascii'), encoding: 'ascii' }));
+  _this.parser.on('data', function(data) {
+        
+    // Get LOG data
+    var dataStr = data.toString();
+    
+    console.log(dataStr);
+    // Raising receive event
+    _this.emit('receive', dataStr);
+  });
 
   //Serial port events
   _this.serialPort.on("open", function () {
     console.log('serial opened ' + _this.port);
-  
-    _this.serialPort.on('data', function(data) {
-        
-      // Get LOG data
-      var dataStr = data.toString();
-      var dataLine = dataStr.replace('\r\n','');
-      
-      // console.log(dataLine);
-      // Raising receive event
-      _this.emit('receive', dataStr);
-    });
   });
 
   _this.serialPort.on("error", function (err) {

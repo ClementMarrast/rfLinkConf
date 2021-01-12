@@ -12,9 +12,11 @@ readTableBtn.addEventListener( 'click', e=> {
     })
 })
 
-socket.on("data", message =>{
+socket.on('rts-record', message =>{
+    console.log("message")
     rawLogsText.append(message)
-} )
+})
+
 // Table
 // let columnArray = [
 //     { colName: 'Name', objPath: 'record.name'},

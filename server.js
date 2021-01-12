@@ -53,13 +53,22 @@ app.get('/somfy-rts',function(req,res)
         {title:'RfLinkConf', message:'Welcome to RFLink configuration', ip:req.socket.address().address});
 });
 
-rfLinkObj.on('receiveRawData', function(dataStr){
+rfLinkObj.on('rawData', function(dataStr){
     // Send LOGs
     if(null != viewSock){
-        viewSock.emit('data', dataStr);
+        viewSock.emit('data', dataStr + "\r\n");
+    }
+});
+
+somfyRtsObj.on('rts-record', function(dataStr){
+    // Send LOGs
+    console.log("server to client")
+    if(null != viewSock){
+        viewSock.emit('rts-record', dataStr + "\r\n");
     }
 });
 
 
-rfLinkObj.init();
 
+rfLinkObj.init();
+somfyRtsObj.init();
