@@ -60,11 +60,16 @@ rfLinkObj.on('rawData', function(dataStr){
     }
 });
 
-somfyRtsObj.on('rts-record', function(dataStr){
+somfyRtsObj.on('rts-record-raw', function(dataStr){
     // Send LOGs
-    console.log("server to client")
     if(null != viewSock){
-        viewSock.emit('rts-record', dataStr + "\r\n");
+        viewSock.emit('rts-record-raw', dataStr + "\r\n");
+    }
+});
+somfyRtsObj.on('rts-record', function(record){
+    // Send LOGs
+    if(null != viewSock){
+        viewSock.emit('rts-record', record);
     }
 });
 

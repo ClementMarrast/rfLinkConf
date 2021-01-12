@@ -28,8 +28,15 @@ somfyRts.prototype.init = function()
   _this.rfLinkHandle.on('RTS-data', function(dataStr){
     // Parse line
     if(dataStr.startsWith("RTS Record")){
-      console.log("somfy to server")
-      _this.emit('rts-record', dataStr)
+      _this.emit('rts-record-raw', dataStr)
+      dataArray = dataStr.split(": ")
+
+      let record = {
+        number: dataArray[1].slice(0, dataArray[1].indexOf(" ")),
+        address: dataArray[2].slice(0, dataArray[2].indexOf(" ")),
+        rollingCode: dataArray[3]
+      }
+      _this.emit('rts-record', record)
     } 
   });
 }

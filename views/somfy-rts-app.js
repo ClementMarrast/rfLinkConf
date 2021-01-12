@@ -10,11 +10,16 @@ readTableBtn.addEventListener( 'click', e=> {
     socket.emit('somfy-rts', {
         command: "READ"
     })
+    rawLogsText.innerHTML = ""
 })
 
-socket.on('rts-record', message =>{
-    console.log("message")
+socket.on('rts-record-raw', message =>{
+    // console.log(message)
     rawLogsText.append(message)
+})
+
+socket.on('rts-record', record =>{
+    console.log(record)
 })
 
 // Table
