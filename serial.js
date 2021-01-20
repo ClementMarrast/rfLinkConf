@@ -22,7 +22,7 @@ serial.prototype.init = function()
 
 serial.prototype.write = function(msg){
   var _this = this;
-  console.log(_this.port + ': ' + msg)
+  // console.log(msg)
   _this.serialPort.write(msg+"\r\n", "ascii");
 }
 

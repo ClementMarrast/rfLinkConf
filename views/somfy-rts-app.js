@@ -1,6 +1,6 @@
 const socket = io()
-// const obj = require('lodash/Object');
 
+let table = document.getElementById("table");
 let readTableBtn = document.getElementById('readTable')
     rawLogsText = document.getElementById('rawLogs')
 
@@ -18,66 +18,105 @@ socket.on('rts-record-raw', message =>{
     rawLogsText.append(message)
 })
 
-socket.on('rts-record', record =>{
-    console.log(record)
+socket.on('rts-records', records =>{
+    console.log("rts-records")
+    console.log(records)
+    
+    loadRecords(records)
 })
 
-// Table
-// let columnArray = [
-//     { colName: 'Name', objPath: 'record.name'},
-//     { colName: 'Index', objPath: 'record.idx'},
-//     { colName: 'Address', objPath: 'record.address'},
-//     { colName: 'RollingCode', objPath: 'record.rollingCode'},
-//     { colName: 'PAIR', pairFct(idx){
-//         socket.emit('somfy-rts', {
-//             command: 'PAIR',
-//             index: idx
-//         });
-//     }},
-//     { colName: 'UP', upFct(){
-//         socket.emit('somfy-rts', 'UP');
-//     }},
-//     { colName: 'DOWN', downFct(){
-//         socket.emit('somfy-rts', 'DOWN');
-//     }}
-// ];
+function loadRecords(records){
+    records.forEach(record => {
+        console.log(record)
+        textAddress[record.number].nodeValue = record.address
+        textRollingCode[record.number].nodeValue = record.rollingCode
+        // cellNumber.appendChild(document.createTextNode(record.number));
+        // cellAddress.appendChild(document.createTextNode(record.address));
+        // cellRollingCode.appendChild(document.createTextNode(record.rollingCode));
+    });
+}
 
-// function insertCellHeader(document, row, name){
-//     let th = document.createElement("th");
-//     let text = document.createTextNode(name);
-//     th.appendChild(text);
-//     row.appendChild(th);
-// }
+let textAddress = []
+let textRollingCode = []
+let btnUp = []
+let btnDown = []
+let btnStop = []
+let btnPair = []
 
-// function generateTableHead(table) {
-//     let thead = table.createTHead();
-//     let row = thead.insertRow();
+function generateTable(){
+    for (let index = 0; index < 16; index++) {
+        let row = table.insertRow();
+        // Cell creation
+        let cellNumber = row.insertCell();
+        let cellAddress = row.insertCell();
+        let cellRollingCode = row.insertCell();
+        let cellUp = row.insertCell();
+        let cellDown = row.insertCell();
+        let cellStop = row.insertCell();
+        let cellPair = row.insertCell();
+        // Cell element creation
+        cellNumber.appendChild(document.createTextNode(index));
+        let address = document.createTextNode("0")
+        cellAddress.appendChild(address);
+        textAddress.push(address)
+        let rollingCode = document.createTextNode("0")
+        cellRollingCode.appendChild(rollingCode);
+        textRollingCode.push(rollingCode)
+        let up = document.createElement("BUTTON")
+        up.innerHTML = "UP"
+        cellUp.appendChild(up);
+        btnUp.push(up)
+        let down = document.createElement("BUTTON")
+        down.innerHTML = "DOWN"
+        cellDown.appendChild(down);
+        btnDown.push(down)
+        let stop = document.createElement("BUTTON")
+        stop.innerHTML = "STOP"
+        cellStop.appendChild(stop);
+        btnStop.push(stop)
+        let pair = document.createElement("BUTTON")
+        pair.innerHTML = "PAIR"
+        cellPair.appendChild(pair);
+        btnPair.push(pair)
+    }
 
-//     for (let col of columnArray){
-//         insertCellHeader(document, row, col.colName);    
-//     }
-// }
+    // Button listeners
+    btnPair.forEach( (btn, idx) => {
+        btn.addEventListener('click', e =>{
+            console.log("click button pair index " + idx)
+            socket.emit('somfy-rts', {
+                command: "PAIR",
+                index: idx
+            })
+        })
+    });
+    btnUp.forEach( (btn, idx) => {
+        btn.addEventListener('click', e =>{
+            console.log("click button UP index " + idx)
+            socket.emit('somfy-rts', {
+                command: "UP",
+                index: idx
+            })
+        })
+    });
+    btnDown.forEach( (btn, idx) => {
+        btn.addEventListener('click', e =>{
+            console.log("click button UP index " + idx)
+            socket.emit('somfy-rts', {
+                command: "DOWN",
+                index: idx
+            })
+        })
+    });
+    btnStop.forEach( (btn, idx) => {
+        btn.addEventListener('click', e =>{
+            console.log("click button UP index " + idx)
+            socket.emit('somfy-rts', {
+                command: "STOP",
+                index: idx
+            })
+        })
+    });
+}
 
-// function insertCellRow(row, name){
-//     let cell = row.insertCell();
-//     let text = document.createTextNode(name);
-//     cell.appendChild(text);
-//     return cell;
-// }
-  
-// function generateTable(table, data) {
-//     for (let element of data) {
-//         let row = table.insertRow();
-        
-//         for (let col of columnArray){
-//             let cell = insertCellRow(row, obj.get(element, col.objPath));
-//             if(col.colorFct != null){
-//                 col.colorFct(cell, obj.get(element, col.objPath));
-//             }
-//         }
-//     }
-// }
-
-// let table = document.querySelector("table");
-// generateTableHead(table);
-// generateTable(table, dataObj);
+generateTable()

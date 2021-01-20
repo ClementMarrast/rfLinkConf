@@ -1,11 +1,34 @@
 html
     head
     body
+        style.
+            table {
+                border-collapse: collapse;
+                border-spacing: 1;
+                border: 1px solid #ddd;
+            }
+            th, td {
+                text-align: left;
+                padding: 4px;
+                border: 1px solid #ddd;
+            }
+            tr:nth-child(even) {
+                background-color: #f2f2f2;
+            } 
         h1 Somfy RTS configuration
         button#readTable Read table
         br
+        table#table
+            tr
+                th Index
+                th Address
+                th Rolling Code
+                th UP
+                th DOWN
+                th STOP
+                th PAIR
+        br
         textarea#rawLogs(cols="100", rows="15")
-
 
 script(src="/socket.io/socket.io.js")
 script(src="./somfy-rts-app.js")
