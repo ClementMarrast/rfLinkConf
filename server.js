@@ -66,10 +66,11 @@ somfyRtsObj.on('rts-record-raw', function(dataStr){
         viewSock.emit('rts-record-raw', dataStr + "\r\n");
     }
 });
-somfyRtsObj.on('rts-record', function(record){
+somfyRtsObj.on('rts-records', function(records){
     // Send LOGs
     if(null != viewSock){
-        viewSock.emit('rts-record', record);
+        console.log(records)
+        viewSock.emit('rts-records', records);
     }
 });
 
