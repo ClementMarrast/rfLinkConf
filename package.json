@@ -1,0 +1,22 @@
+{
+    "name": "rfLinkConf",
+    "version": "0.0.1",
+    "description": "Web server to configure RF Link",
+    "author": {
+        "name": "Clement Marrast",
+        "email": "clement.marrast@gmail.com",
+        "url": "https://github.com/ClementMarrast/rfLinkConf"
+    },
+    "scripts": {
+        "start": "node server.js /dev/ttyUSB0",
+        "watch": "nodemon --exec node server.js /dev/ttyUSB0"
+    },
+    "dependencies": {
+        "express": "^4.17.1",
+        "lodash": "^4.17.20",
+        "nodemon": "^2.0.7",
+        "pug": "^3.0.0",
+        "serialport": "^9.0.2",
+        "socket.io": "^3.0.1"
+    }
+}
